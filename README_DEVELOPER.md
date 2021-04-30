@@ -34,7 +34,7 @@ xlcompare -o examples\diffxlsx.xlsx examples\old.xlsx examples\new.xlsx
 ## Upload To TestPyPI
 - Using steps from this [reference](https://packaging.python.org/tutorials/packaging-projects/):
 
-- Create/edit file `.pypirc` in `%HOME%` (Windows):
+- Create/edit file `.pypirc` in `%HOME%` (Windows) or `$HOME` (Linux):
 ```
 [testpypi]
   username = __token__
