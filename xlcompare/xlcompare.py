@@ -318,9 +318,20 @@ def integerize_column(tbl, heading):
             dct[heading] = str(int(float(dct[heading])))
 
 
+def estimate_column_width(text, initial_width):
+    """Estimate column width from list of text, and initial width."""
+    col_width = 0
+    for s in text.splitlines():
+        col_width = max(col_width, len(s))
+
+    final_width = max(initial_width, int(1.25 * col_width))
+
+    return final_width
+
+
 def read_xls(xlsfile, integerize_id=True, id_column='ID'):
     '''Read the first sheet of .xls file.'''
-    wb = xlrd.open_workbook(xlsfile, formatting_info=True)
+    wb = xlrd.open_workbook(xlsfile)
     ws = wb.sheet_by_index(0)
     print(f'{xlsfile}: Reading: {ws.name}')
     tbl, hdr2width = read_sheet_xls(ws)
@@ -341,13 +352,16 @@ def read_sheet_xls(ws):
     for col in range(ws.ncols):
         h = cell_to_text(ws, 0, col)
         hdr.append(h)
-        hdr2width[h] = int(ws.computed_column_width(col) / 256)
+        hdr2width[h] = int(len(h) * 1.25)
 
     # read data rows
     for row in range(1, ws.nrows):
         d = OrderedDict()
         for col in range(ws.ncols):
-            d[hdr[col]] = cell_to_text(ws, row, col)
+            h = hdr[col]
+            d[h] = cell_to_text(ws, row, col)
+            hdr2width[h] = estimate_column_width(d[h], hdr2width[h])
+
         tbl.append(d.copy())
 
     return tbl, hdr2width
@@ -385,9 +399,7 @@ def read_sheet_xlsx(db, ws_name):
         for col in range(len(row_data)):
             h = hdr[col]
             d[h] = str(row_data[col])
-            # estimate column width
-            col_width = max([len(s) for s in d[h].splitlines()])
-            hdr2width[h] = max(hdr2width[h], int(1.25 * col_width))
+            hdr2width[h] = estimate_column_width(d[h], hdr2width[h])
 
         tbl.append(d.copy())
 
