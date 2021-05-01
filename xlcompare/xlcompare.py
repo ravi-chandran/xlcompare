@@ -17,6 +17,7 @@ DESCRIPTION = 'Compares Excel .xls or .xlsx files (first sheet only) with ' \
 
 DEFAULT_COL_WIDTH = 10  # slightly larger than Excel default
 
+
 class Fmt(IntEnum):
     '''Definition for convenience in format strings for xlsxwriter.'''
     WRAP = 1
@@ -49,11 +50,12 @@ def create_xlsx(outfilename):
 
     # format the output .xlsx file
     FMT[Fmt.WRAP] = wb.add_format({'text_wrap': True})
-    #FMT[Fmt.ITALIC] = wb.add_format({'italic': True})
+    # FMT[Fmt.ITALIC] = wb.add_format({'italic': True})
     FMT[Fmt.BOLD] = wb.add_format({'bold': True})
 
     # Courier New is an equally spaced font, useful for tables
-    FMT[Fmt.COURIER] = wb.add_format({'font_name': 'Courier New', 'text_wrap': True})
+    FMT[Fmt.COURIER] = wb.add_format(
+        {'font_name': 'Courier New', 'text_wrap': True})
 
     FMT[Fmt.WRAPBORDER] = wb.add_format(
         {'text_wrap': True,
@@ -79,36 +81,36 @@ def create_xlsx(outfilename):
 
     FMT[Fmt.GRAYTEXT] = wb.add_format(
         {'text_wrap': True,
-        'font_color': 'gray',
+         'font_color': 'gray',
          'num_format': '@',
          'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
 
     FMT[Fmt.HROW] = wb.add_format(
-        {   'bold': True, 'font_color': 'white',
-            'num_format': '@',
-            'align': 'center', 'bg_color': '#0070c0', 'text_wrap': True,
-            'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
+        {'bold': True, 'font_color': 'white',
+         'num_format': '@',
+         'align': 'center', 'bg_color': '#0070c0', 'text_wrap': True,
+         'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
 
     FMT[Fmt.H1] = wb.add_format(
-        {   'bold': True, 'font_color': 'white',
-            'num_format': '@',
-            'font_size': 14,
-            'bg_color': '#808080', 'text_wrap': True,
-            'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
+        {'bold': True, 'font_color': 'white',
+         'num_format': '@',
+         'font_size': 14,
+         'bg_color': '#808080', 'text_wrap': True,
+         'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
 
     FMT[Fmt.H2] = wb.add_format(
-        {   'bold': True, 'font_color': 'white',
-            'num_format': '@',
-            'font_size': 12,
-            'bg_color': '#808080', 'text_wrap': True,
-            'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
+        {'bold': True, 'font_color': 'white',
+         'num_format': '@',
+         'font_size': 12,
+         'bg_color': '#808080', 'text_wrap': True,
+         'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
 
     FMT[Fmt.H3] = wb.add_format(
-        {   'bold': True, 'font_color': 'white',
-            'num_format': '@',
-            'font_size': 11,
-            'bg_color': '#808080', 'text_wrap': True,
-            'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
+        {'bold': True, 'font_color': 'white',
+         'num_format': '@',
+         'font_size': 11,
+         'bg_color': '#808080', 'text_wrap': True,
+         'border': 1, 'bottom': 1, 'top': 1, 'left': 1, 'right': 1})
 
     return wb
 
@@ -151,7 +153,6 @@ def compare_celltext(a, b):
 
     for tag, i1, i2, j1, j2 in sm.get_opcodes():
         if tag == 'equal' and a[i1:i2]:
-            #cmp.append(FMT[Fmt.DEFAULT])
             cmp.append(a[i1:i2])
         elif tag == 'delete' and a[i1:i2]:
             cmp.append(FMT[Fmt.DEL])
@@ -175,7 +176,7 @@ def write_cell(ws, row, col, list_out):
     x = ws.write_rich_string(row, col, *list_out, FMT[Fmt.WRAPBORDER])
     if x < 0:
         print('ERROR: write_rich_string returned %d' % x)
-        print('row=%d, col=%d' % (row,col))
+        print('row=%d, col=%d' % (row, col))
         print(*list_out)
         sys.exit(1)
 
@@ -226,22 +227,28 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
                 bool_diff = True
                 visible_cols.add(i)  # mark the column to be visible
 
-            if d_new[s]=='' and d_old[s]=='':  # don't compare if both are blank
+            if d_new[s] == '' and d_old[s] == '':
                 ws_out.write_blank(row, col, '', FMT[Fmt.WRAPBORDER])
-            elif d_new[s].strip()=='' and d_old[s].strip()=='':  # don't compare if both are blank
+            elif d_new[s].strip() == '' and d_old[s].strip() == '':
                 ws_out.write_blank(row, col, '', FMT[Fmt.WRAPBORDER])
-            elif d_new[s]==d_old[s]:
-                ws_out.write_string(row, col, replace_bullet(d_old[s]), FMT[Fmt.WRAPBORDER])
-            elif d_new[s]=='':
-                ws_out.write_string(row, col, replace_bullet(d_old[s]), FMT[Fmt.DEL])
-            elif d_old[s]=='':
-                ws_out.write_string(row, col, replace_bullet(d_new[s]), FMT[Fmt.INS])
+            elif d_new[s] == d_old[s]:
+                ws_out.write_string(row, col,
+                                    replace_bullet(d_old[s]),
+                                    FMT[Fmt.WRAPBORDER])
+            elif d_new[s] == '':
+                ws_out.write_string(row, col,
+                                    replace_bullet(d_old[s]),
+                                    FMT[Fmt.DEL])
+            elif d_old[s] == '':
+                ws_out.write_string(row, col,
+                                    replace_bullet(d_new[s]),
+                                    FMT[Fmt.INS])
             else:
-                list_out, junk = compare_celltext(replace_bullet(d_old[s]), replace_bullet(d_new[s]))
-                ws_out.write_rich_string(row, col, *list_out, FMT[Fmt.WRAPBORDER])
-                # junkfile.write(f'a={d_old[s]}\n')
-                # junkfile.write(f'b={d_new[s]}\n')
-                # junkfile.write(f'{junk}=========================\n')
+                list_out, junk = compare_celltext(replace_bullet(d_old[s]),
+                                                  replace_bullet(d_new[s]))
+                ws_out.write_rich_string(row, col,
+                                         *list_out,
+                                         FMT[Fmt.WRAPBORDER])
 
             col += 1
 
@@ -250,7 +257,6 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
             hidden_rows.add(row)
         else:
             ws_out.write_string(row, col, 'Yes', FMT[Fmt.WRAPBORDER])
-        #visible_cols.add(col)
 
         row += 1
 
@@ -270,9 +276,12 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
 
 def compare_headers(hdr2width_old, hdr2width_new, colwidthmax):
     """Compare headers."""
-    in_old_but_not_new = set(hdr2width_old.keys()).difference(set(hdr2width_new.keys()))
-    in_new_but_not_old = set(hdr2width_new.keys()).difference(set(hdr2width_old.keys()))
-    hdr_common = set(hdr2width_old.keys()).intersection(set(hdr2width_new.keys()))
+    in_old_but_not_new = set(hdr2width_old.keys()).difference(
+                            set(hdr2width_new.keys()))
+    in_new_but_not_old = set(hdr2width_new.keys()).difference(
+                            set(hdr2width_old.keys()))
+    hdr_common = set(hdr2width_old.keys()).intersection(
+                            set(hdr2width_new.keys()))
 
     if in_old_but_not_new:
         print("Columns in old but not new:", in_old_but_not_new)
@@ -305,7 +314,7 @@ def integerize_column(tbl, heading):
     """Get rid of decimal points and places in ID field if a number."""
     for dct in tbl:
         s = dct[heading]
-        if s.replace('.','',1).isdigit():
+        if s.replace('.', '', 1).isdigit():
             dct[heading] = str(int(float(dct[heading])))
 
 

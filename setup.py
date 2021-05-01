@@ -6,10 +6,10 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="xlcompare",
-    version="0.1.0",
+    version="0.1.1",
     packages=setuptools.find_packages(),
 
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'xlcompare=xlcompare.xlcompare:main'
         ],
