@@ -16,7 +16,8 @@ NEW_XLSX = os.path.join(TESTDIR, 'inputs', 'new.xlsx')
 EXPECTED = os.path.join(TESTDIR, 'expected', 'diffxls.xlsx')
 
 OUTDIFF = os.path.join(TESTDIR, 'diff.xlsx')
-SAVEDIFF = os.path.join(TESTDIR, 'save.xlsx')
+SAVEDIFF1 = os.path.join(TESTDIR, 'save1.xlsx')
+SAVEDIFF2 = os.path.join(TESTDIR, 'save2.xlsx')
 
 
 def rmfile(filepath):
@@ -56,6 +57,11 @@ def test_xls_vs_xls():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLS, NEW_XLS, '-o', OUTDIFF]
     compare(cmd)
+
+    # save for visual check, no easy way to automate
+    rmfile(SAVEDIFF1)
+    os.rename(OUTDIFF, SAVEDIFF1)
+
     rmfile(OUTDIFF)
 
 
@@ -64,7 +70,11 @@ def test_xlsx_vs_xlsx():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLSX, NEW_XLSX, '-o', OUTDIFF]
     compare(cmd)
-    os.rename(OUTDIFF, SAVEDIFF)
+
+    # save for visual check, no easy way to automate
+    rmfile(SAVEDIFF2)
+    os.rename(OUTDIFF, SAVEDIFF2)
+
     rmfile(OUTDIFF)
 
 
@@ -82,3 +92,9 @@ def test_xlsx_vs_xls():
     cmd = ['xlcompare', OLD_XLSX, NEW_XLS, '-o', OUTDIFF]
     compare(cmd)
     rmfile(OUTDIFF)
+
+# TODO:
+# Test for --id
+# Test for inserted column
+# Test for deleted column
+# Feature addition: report statistics
