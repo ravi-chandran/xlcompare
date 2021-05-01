@@ -18,6 +18,7 @@ venv1\Scripts\python -m pip install --upgrade build
 venv1\Scripts\python -m pip install --upgrade twine
 venv1\Scripts\python -m pip install xlrd pylightxl XlsxWriter
 venv1\Scripts\python -m pip install pycodestyle
+venv1\Scripts\python -m pip install pytest
 ```
 
 ## Development Iterations
@@ -28,8 +29,7 @@ venv1\Scripts\python -m pip install pycodestyle
 cd xlcompare
 activate.bat
 python -m pip install --editable .
-xlcompare -o examples\diffxls.xlsx examples\old.xls examples\new.xls
-xlcompare -o examples\diffxlsx.xlsx examples\old.xlsx examples\new.xlsx
+pytest -v
 ```
 
 ## Configure TestPyPI and PyPI Access
