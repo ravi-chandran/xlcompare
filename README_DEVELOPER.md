@@ -17,6 +17,7 @@ venv1\Scripts\python -m pip install --upgrade setuptools
 venv1\Scripts\python -m pip install --upgrade build
 venv1\Scripts\python -m pip install --upgrade twine
 venv1\Scripts\python -m pip install xlrd pylightxl XlsxWriter
+venv1\Scripts\python -m pip install pycodestyle
 ```
 
 ## Development Iterations
@@ -31,16 +32,22 @@ xlcompare -o examples\diffxls.xlsx examples\old.xls examples\new.xls
 xlcompare -o examples\diffxlsx.xlsx examples\old.xlsx examples\new.xlsx
 ```
 
-## Upload To TestPyPI
+## Configure TestPyPI and PyPI Access
 - Using steps from this [reference](https://packaging.python.org/tutorials/packaging-projects/):
 
 - Create/edit file `.pypirc` in `%HOME%` (Windows) or `$HOME` (Linux):
 ```
 [testpypi]
   username = __token__
-  password = enter_the_token_created_on_test.pypi.org
+  password = enter the token created on test.pypi.org
+
+[pypi]
+  username = __token__
+  password = enter the token created on pypi.org
 ```
 
+## Upload To TestPyPI
+- Build and upload
 ```bat
 cd xlcompare
 activate.bat
@@ -48,29 +55,25 @@ python -m build
 python -m twine upload --repository testpypi dist/*
 ```
 
+- Install and try it out in a separate `venv`.
+
+- Note that TestPyPI provides the following install. However, the dependencies (`xlrd>=2.0.1` etc) cannot be found at `test.pypi.org` and will need to be installed manually.
+```bat
+pip install -i https://test.pypi.org/simple/ xlcompare
+```
+
 ## Upload To PyPI
-
-## OLD PyPI Notes
-- Generate `tar.gz` that will be uploaded with `twine`:
+- Build and upload
 ```bat
-python setup.py sdist
-```
-
-
-
-- Push to TestPyPI
-```bat
-python -m twine upload --repository testpypi dist/*
-```
-
-- Push to PyPI
-```bat
+cd xlcompare
+activate.bat
+python -m build
 python -m twine upload dist/*
 ```
 
-## `pytest` Notes
-Tests are written to support both Windows and Linux, although this utility is not really needed in Linux.
 
+
+## TODO: `pytest` Notes
 - Install `pytest`:
 ```bat
 python -m pip install --upgrade pytest
