@@ -427,7 +427,11 @@ def read_sheet_xlsx(db, ws_name):
         hdr2width[h] = int(len(h) * 1.25)
 
     # read data rows
+    skipped_first_row = False
     for row_data in db.ws(ws=ws_name).rows:
+        if not skipped_first_row:
+            skipped_first_row = True
+            continue
         d = OrderedDict()
         for col in range(len(row_data)):
             h = hdr[col]
