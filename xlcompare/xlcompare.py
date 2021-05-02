@@ -288,7 +288,7 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
     for k, v in statistics.items():
         num_changes += v
     if num_changes == 0:
-        print('No differences found.')
+        print('No differences in common columns found.')
     else:
         for k, v in statistics.items():
             if v > 0:
