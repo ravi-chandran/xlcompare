@@ -183,6 +183,11 @@ def write_cell(ws, row, col, list_out):
 
 def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
     """Compare tables from old and new files."""
+    statistics = OrderedDict([
+        ('Inserted', 0),
+        ('Deleted', 0),
+        ('Modified', 0)
+        ])
     row, col = 1, 0
     hidden_rows = set()  # set of rows to hide using auto-filter
     visible_cols = {hdr2width[id_column]}  # set of columns to not hide
@@ -208,12 +213,17 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
     # Loop through all objects
     for objid in union_objid:
         bool_diff = False  # flag to indicate difference exists in row
+        bool_row_inserted_deleted = False
         if objid in dct_new and objid not in dct_old:  # inserted object
             d_new = dct_new[objid]
             d_old = blank_d
+            statistics['Inserted'] += 1
+            bool_row_inserted_deleted = True
         elif objid not in dct_new and objid in dct_old:  # deleted object
             d_new = blank_d
             d_old = dct_old[objid]
+            statistics['Deleted'] += 1
+            bool_row_inserted_deleted = True
         else:
             d_new = dct_new[objid]
             d_old = dct_old[objid]
@@ -255,6 +265,8 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
             hidden_rows.add(row)
         else:
             ws_out.write_string(row, col, 'Yes', FMT[Fmt.WRAPBORDER])
+            if not bool_row_inserted_deleted:
+                statistics['Modified'] += 1
 
         row += 1
 
@@ -270,6 +282,17 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
     ws_out.filter_column(len(hdr2width), 'x == NonBlanks')
     for i in hidden_rows:
         ws_out.set_row(i, options={'hidden': True})
+
+    # report statistics
+    num_changes = 0
+    for k, v in statistics.items():
+        num_changes += v
+    if num_changes == 0:
+        print('No differences found.')
+    else:
+        for k, v in statistics.items():
+            if v > 0:
+                print(f'{k} rows: {v}')
 
 
 def compare_headers(hdr2width_old, hdr2width_new, colwidthmax):
