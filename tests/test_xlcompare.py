@@ -91,14 +91,14 @@ def test_col_change():
     cmd = ['xlcompare', OLD_COLS_CHG, NEW_COLS_CHG, '-o', OUTDIFF]
     result = verify_common(cmd)
 
-    expected1a = "Columns in old but not new:"
-    expected1b = "{'Test Column Deletion 1', 'Test Column Deletion 2'," \
-                 " 'Test Column Deletion 3'}"
-    assert expected1a in result.stdout
-    assert expected1b in result.stdout
+    # Verify deleted columns - column output not ordered
+    assert "Columns in old but not new:" in result.stdout
+    assert "'Delete1'" in result.stdout
+    assert "'Delete2'" in result.stdout
+    assert "'Delete3'" in result.stdout
 
-    expected2 = "Columns in new but not old: {'Test Column Insertion 1'}"
-    assert expected2 in result.stdout
+    # Verify inserted column
+    assert "Columns in new but not old: {'Insert 1'}" in result.stdout
 
     rmfile(OUTDIFF)
 
