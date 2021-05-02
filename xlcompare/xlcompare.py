@@ -329,12 +329,22 @@ def estimate_column_width(text, initial_width):
     return final_width
 
 
+def error_check_id(hdr2width, id_column, filepath):
+    """Check whether ID column is present in header."""
+    if id_column not in hdr2width:
+        _, filename = os.path.split(filepath)
+        print(f'ERROR: Column {id_column} not found in {filename}')
+        sys.exit(1)
+
+
 def read_xls(xlsfile, integerize_id=True, id_column='ID'):
     '''Read the first sheet of .xls file.'''
     wb = xlrd.open_workbook(xlsfile)
     ws = wb.sheet_by_index(0)
     print(f'{xlsfile}: Reading: {ws.name}')
     tbl, hdr2width = read_sheet_xls(ws)
+
+    error_check_id(hdr2width, id_column, xlsfile)
 
     if integerize_id:
         integerize_column(tbl, id_column)
@@ -373,6 +383,8 @@ def read_xlsx(xlsxfile, integerize_id=True, id_column='ID'):
     ws_name = db.ws_names[0]
     print(f'{xlsxfile}: Reading: {ws_name}')
     tbl, hdr2width = read_sheet_xlsx(db, ws_name)
+
+    error_check_id(hdr2width, id_column, xlsxfile)
 
     if integerize_id:
         integerize_column(tbl, id_column)
