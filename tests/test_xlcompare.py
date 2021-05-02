@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import filecmp
 import os
 import pytest
 import subprocess
@@ -13,7 +12,10 @@ NEW_XLS = os.path.join(TESTDIR, 'inputs', 'new.xls')
 OLD_XLSX = os.path.join(TESTDIR, 'inputs', 'old.xlsx')
 NEW_XLSX = os.path.join(TESTDIR, 'inputs', 'new.xlsx')
 
-EXPECTED = os.path.join(TESTDIR, 'expected', 'diffxls.xlsx')
+OLD_COLS_CHG = os.path.join(TESTDIR, 'inputs', 'old_columns_change.xlsx')
+NEW_COLS_CHG = os.path.join(TESTDIR, 'inputs', 'new_columns_change.xlsx')
+
+# EXPECTED = os.path.join(TESTDIR, 'expected', 'diffxls.xlsx')
 
 OUTDIFF = os.path.join(TESTDIR, 'diff.xlsx')
 SAVEDIFF1 = os.path.join(TESTDIR, 'save1.xlsx')
@@ -26,24 +28,12 @@ def rmfile(filepath):
         os.remove(filepath)
 
 
-def compare_files(file1, file2):
-    """Compare two binary files."""
-    with open(file1, 'rb') as f:
-        data1 = f.read()
-    with open(file2, 'rb') as f:
-        data2 = f.read()
-    return data1 == data2
-
-
 def compare(cmd):
     result = subprocess.run(cmd, capture_output=True, text=True)
     assert result.stderr == ''
     assert 'Generated' in result.stdout
     assert 'Done.' in result.stdout
     assert os.path.isfile(OUTDIFF)
-    # assert compare_files(OUTDIFF, EXPECTED)
-    # filecmp.clear_cache()
-    # assert filecmp.cmp(OUTDIFF, EXPECTED)
 
 
 # Test basic entry point to xlcompare
