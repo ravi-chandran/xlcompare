@@ -34,6 +34,7 @@ def verify_common(cmd):
     assert 'Generated' in result.stdout
     assert 'Done.' in result.stdout
     assert os.path.isfile(OUTDIFF)
+    return result
 
 
 # Test basic entry point to xlcompare
@@ -83,8 +84,27 @@ def test_xlsx_vs_xls():
     verify_common(cmd)
     rmfile(OUTDIFF)
 
+
+# Test comparison of column insertion/deletion
+def test_col_change():
+    rmfile(OUTDIFF)
+    cmd = ['xlcompare', OLD_COLS_CHG, NEW_COLS_CHG, '-o', OUTDIFF]
+    result = verify_common(cmd)
+
+    expected1a = "Columns in old but not new:"
+    expected1b = "{'Test Column Deletion 1', 'Test Column Deletion 2'," \
+                 " 'Test Column Deletion 3'}"
+    assert expected1a in result.stdout
+    assert expected1b in result.stdout
+
+    expected2 = "Columns in new but not old: {'Test Column Insertion 1'}"
+    assert expected2 in result.stdout
+
+    rmfile(OUTDIFF)
+
+
+
+
 # TODO:
 # Test for --id
-# Test for inserted column
-# Test for deleted column
 # Feature addition: report statistics
