@@ -19,7 +19,7 @@ DEFAULT_COL_WIDTH = 10  # slightly larger than Excel default
 
 
 class Fmt(IntEnum):
-    '''Definition for convenience in format strings for xlsxwriter.'''
+    """Definition for convenience in format strings for xlsxwriter."""
     WRAP = 1
     BOLD = 2
     ITALIC = 2
@@ -44,7 +44,7 @@ def get_xlsx_formats():
 
 
 def create_xlsx(outfilename):
-    '''Create the output .xlsx file with the appropriate formats.'''
+    """Create the output .xlsx file with the appropriate formats."""
     # create output .xlsx file
     wb = xlsxwriter.Workbook(outfilename)
 
@@ -116,7 +116,7 @@ def create_xlsx(outfilename):
 
 
 def write_header_row_xlsx(wb, hdr2width):
-    '''Write header row to .xlsx file.'''
+    """Write header row to .xlsx file."""
     ws = wb.add_worksheet()
 
     # freeze top row
@@ -142,7 +142,7 @@ def replace_bullet(s):
 
 
 def compare_celltext(a, b):
-    '''Compare 2 strings and generate formatted string for output .xlsx.'''
+    """Compare 2 strings and generate formatted string for output .xlsx."""
     cmp = []  # initialize compare list
     sm = difflib.SequenceMatcher(None, a, b)
 
@@ -172,7 +172,7 @@ def compare_celltext(a, b):
 
 
 def write_cell(ws, row, col, list_out):
-    '''Write rich string to cell.'''
+    """Write rich string to cell."""
     x = ws.write_rich_string(row, col, *list_out, FMT[Fmt.WRAPBORDER])
     if x < 0:
         print('ERROR: write_rich_string returned %d' % x)
@@ -182,7 +182,7 @@ def write_cell(ws, row, col, list_out):
 
 
 def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
-    '''Compare tables from old and new files.'''
+    """Compare tables from old and new files."""
     row, col = 1, 0
     hidden_rows = set()  # set of rows to hide using auto-filter
     visible_cols = {hdr2width[id_column]}  # set of columns to not hide
@@ -204,8 +204,6 @@ def compare_sheets(ws_out, tbl_old, tbl_new, hdr2width, id_column):
     for objid in dct_old:
         if objid not in union_objid:
             union_objid.append(objid)
-
-    # junkfile = open('junk.txt', 'wt', encoding='utf-8')
 
     # Loop through all objects
     for objid in union_objid:
@@ -299,7 +297,7 @@ def compare_headers(hdr2width_old, hdr2width_new, colwidthmax):
 
 
 def cell_to_text(ws, row, col):
-    '''Convert cell text to string.'''
+    """Convert cell text to string."""
     cell_type = ws.cell_type(row, col)
     if cell_type == xlrd.XL_CELL_TEXT:
         value = ws.cell_value(row, col)
@@ -338,7 +336,7 @@ def error_check_id(hdr2width, id_column, filepath):
 
 
 def read_xls(xlsfile, integerize_id=True, id_column='ID'):
-    '''Read the first sheet of .xls file.'''
+    """Read the first sheet of .xls file."""
     wb = xlrd.open_workbook(xlsfile)
     ws = wb.sheet_by_index(0)
     print(f'{xlsfile}: Reading: {ws.name}')
@@ -353,7 +351,7 @@ def read_xls(xlsfile, integerize_id=True, id_column='ID'):
 
 
 def read_sheet_xls(ws):
-    '''Read sheet into dictionary from .xls file.'''
+    """Read sheet into dictionary from .xls file."""
     hdr = []     # list of header row elements
     hdr2width = OrderedDict()  # column width of given header
     tbl = []     # list of rows of spreadsheet
@@ -378,7 +376,7 @@ def read_sheet_xls(ws):
 
 
 def read_xlsx(xlsxfile, integerize_id=True, id_column='ID'):
-    '''Read the first sheet of .xlsx file.'''
+    """Read the first sheet of .xlsx file."""
     db = pylightxl.readxl(fn=xlsxfile)
     ws_name = db.ws_names[0]
     print(f'{xlsxfile}: Reading: {ws_name}')
@@ -393,7 +391,7 @@ def read_xlsx(xlsxfile, integerize_id=True, id_column='ID'):
 
 
 def read_sheet_xlsx(db, ws_name):
-    '''Read sheet into dictionary from .xlsx file.'''
+    """Read sheet into dictionary from .xlsx file."""
     hdr = []     # list of header row elements
     hdr2width = OrderedDict()  # column width of given header
     tbl = []     # list of rows of spreadsheet
@@ -419,7 +417,7 @@ def read_sheet_xlsx(db, ws_name):
 
 
 def get_user_inputs():
-    '''Get user arguments and open files.'''
+    """Get user arguments and open files."""
     # get paths of files to be compared
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
