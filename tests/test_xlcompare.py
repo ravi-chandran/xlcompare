@@ -28,7 +28,7 @@ def rmfile(filepath):
         os.remove(filepath)
 
 
-def compare(cmd):
+def verify_common(cmd):
     result = subprocess.run(cmd, capture_output=True, text=True)
     assert result.stderr == ''
     assert 'Generated' in result.stdout
@@ -46,7 +46,7 @@ def test_entrypoint():
 def test_xls_vs_xls():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLS, NEW_XLS, '-o', OUTDIFF]
-    compare(cmd)
+    verify_common(cmd)
 
     # save for visual check, no easy way to automate
     rmfile(SAVEDIFF1)
@@ -59,7 +59,7 @@ def test_xls_vs_xls():
 def test_xlsx_vs_xlsx():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLSX, NEW_XLSX, '-o', OUTDIFF]
-    compare(cmd)
+    verify_common(cmd)
 
     # save for visual check, no easy way to automate
     rmfile(SAVEDIFF2)
@@ -72,7 +72,7 @@ def test_xlsx_vs_xlsx():
 def test_xls_vs_xlsx():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLS, NEW_XLSX, '-o', OUTDIFF]
-    compare(cmd)
+    verify_common(cmd)
     rmfile(OUTDIFF)
 
 
@@ -80,7 +80,7 @@ def test_xls_vs_xlsx():
 def test_xlsx_vs_xls():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLSX, NEW_XLS, '-o', OUTDIFF]
-    compare(cmd)
+    verify_common(cmd)
     rmfile(OUTDIFF)
 
 # TODO:
