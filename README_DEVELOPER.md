@@ -17,8 +17,8 @@ venv1\Scripts\python -m pip install --upgrade setuptools
 venv1\Scripts\python -m pip install --upgrade build
 venv1\Scripts\python -m pip install --upgrade twine
 venv1\Scripts\python -m pip install xlrd pylightxl XlsxWriter
-venv1\Scripts\python -m pip install pycodestyle
-venv1\Scripts\python -m pip install pytest
+venv1\Scripts\python -m pip install --upgrade pycodestyle
+venv1\Scripts\python -m pip install --upgrade pytest
 ```
 
 ## Development Iterations
@@ -47,6 +47,7 @@ pytest -v
 ```
 
 ## Upload To TestPyPI
+- Bump version in `setup.py`
 - Build and upload
 ```bat
 cd xlcompare
@@ -63,23 +64,11 @@ pip install -i https://test.pypi.org/simple/ xlcompare
 ```
 
 ## Upload To PyPI
+- Bump version in `setup.py`
 - Build and upload
 ```bat
 cd xlcompare
 activate.bat
 python -m build
 python -m twine upload dist/*
-```
-
-
-
-## TODO: `pytest` Notes
-- Install `pytest`:
-```bat
-python -m pip install --upgrade pytest
-```
-
-- Local testing:
-```bat
-pytest -v
 ```
