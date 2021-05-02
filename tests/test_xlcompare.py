@@ -38,6 +38,7 @@ def verify_common(cmd):
     assert 'Generated' in result.stdout
     assert 'Done.' in result.stdout
     assert os.path.isfile(OUTDIFF)
+
     return result
 
 
@@ -51,7 +52,9 @@ def test_entrypoint():
 def test_xls_vs_xls():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLS, NEW_XLS, '-o', OUTDIFF]
-    verify_common(cmd)
+    result = verify_common(cmd)
+    assert 'Deleted rows: 2' in result.stdout
+    assert 'Modified rows: 3' in result.stdout
 
     # save for visual check, no easy way to automate
     rmfile(SAVEDIFF1)
@@ -64,7 +67,9 @@ def test_xls_vs_xls():
 def test_xlsx_vs_xlsx():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLSX, NEW_XLSX, '-o', OUTDIFF]
-    verify_common(cmd)
+    result = verify_common(cmd)
+    assert 'Deleted rows: 2' in result.stdout
+    assert 'Modified rows: 3' in result.stdout
 
     # save for visual check, no easy way to automate
     rmfile(SAVEDIFF2)
@@ -77,7 +82,9 @@ def test_xlsx_vs_xlsx():
 def test_xls_vs_xlsx():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLS, NEW_XLSX, '-o', OUTDIFF]
-    verify_common(cmd)
+    result = verify_common(cmd)
+    assert 'Deleted rows: 2' in result.stdout
+    assert 'Modified rows: 3' in result.stdout
     rmfile(OUTDIFF)
 
 
@@ -85,7 +92,9 @@ def test_xls_vs_xlsx():
 def test_xlsx_vs_xls():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_XLSX, NEW_XLS, '-o', OUTDIFF]
-    verify_common(cmd)
+    result = verify_common(cmd)
+    assert 'Deleted rows: 2' in result.stdout
+    assert 'Modified rows: 3' in result.stdout
     rmfile(OUTDIFF)
 
 
@@ -94,6 +103,7 @@ def test_col_change():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_COLS_CHG, NEW_COLS_CHG, '-o', OUTDIFF]
     result = verify_common(cmd)
+    assert 'No differences in common columns found' in result.stdout
 
     # Verify deleted columns - column output not ordered
     assert "Columns in old but not new:" in result.stdout
@@ -140,7 +150,6 @@ def test_non_standard_good_id():
     rmfile(OUTDIFF)
     cmd = ['xlcompare', OLD_IDTEST, NEW_IDTEST, '-o', OUTDIFF, '--id', 'REQID']
     result = verify_common(cmd)
-
-# TODO:
-# Test for --id
-# Feature addition: report statistics
+    assert 'Deleted rows: 2' in result.stdout
+    assert 'Modified rows: 3' in result.stdout
+    rmfile(OUTDIFF)
