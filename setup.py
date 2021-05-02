@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="xlcompare",
-    version="0.1.1",
+    version="0.2.0",
     packages=setuptools.find_packages(),
 
     entry_points={
