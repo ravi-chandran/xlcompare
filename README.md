@@ -1,4 +1,5 @@
 # xlcompare
+[![PyPI version](https://badge.fury.io/py/xlcompare.svg)](https://badge.fury.io/py/xlcompare)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Compare two Excel files (old vs new) where each row has a *unique* ID (identifier). Ideal for comparing requirements, bill of materials, invoices, exported databases, etc. Generates differences Excel file showing changes from old to new (red strikeout for deletions, blue for insertions). Supports both `.xls` and `.xlsx` formats as inputs.
